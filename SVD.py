@@ -4,7 +4,7 @@
 # -----------------------------------------------------------------------------#
 # Description:
 # This utility helps to compute SVD from a nxm matrix as well as plot the
-# singular value (sigma) and POD modes
+# singular value (sigma)
 #
 #==============================================================================#
 
@@ -57,3 +57,10 @@ def plot_sigma(s, diag_matrix=True, modes_limit=0):
 	plt.xlabel('Index', fontsize=12)
 	plt.ylabel('Singular Value', fontsize=12)
 	plt.show()
+
+"""
+#Test case
+A = np.random.rand(100, 100)
+U, S, VT = compute(A)
+plot_sigma(S)
+"""
