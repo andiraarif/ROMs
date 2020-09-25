@@ -38,7 +38,6 @@ def reconstruct_matrix(u, s, vt):
 def plot_sigma(s, diag_matrix=True, modes_limit=0):
 	sigma = []
 	n_sigma = s.shape[0]
-	modes_num = np.linspace(1, n_sigma, n_sigma)
 
 	if modes_limit == 0:
 		n_modes = n_sigma
