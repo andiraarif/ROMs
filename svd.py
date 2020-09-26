@@ -13,10 +13,10 @@ from matplotlib import pyplot as plt
 
 
 def compute(A, full_matrices=True, compute_uv=True, hermitian=False):
-	U, S, VT = np.linalg.svd(A, full_matrices, compute_uv, hermitian)
-	S = sigma_matrix(S)
+	u, s, vt = np.linalg.svd(A, full_matrices, compute_uv, hermitian)
+	s = sigma_matrix(s)
 
-	return U, S, VT
+	return u, s, vt
 
 
 def sigma_matrix(s):
@@ -52,15 +52,16 @@ def plot_sigma(s, diag_matrix=True, modes_limit=0):
 	else:
 		sigma = s
 
+	plt.title("Singular Values based on Sigma Matrix",fontsize=12)
 	plt.semilogy(sigma, '-ko')
 	plt.xlim(0, n_modes-1)
-	plt.xlabel('Index', fontsize=12)
-	plt.ylabel('Singular Value', fontsize=12)
+	plt.xlabel('Index', fontsize=10)
+	plt.ylabel('Singular Value', fontsize=10)
 	plt.show()
 
 """
 #Test case
 A = np.random.rand(100, 100)
-U, S, VT = compute(A)
-plot_sigma(S)
+u, s, vt = compute(A)
+plot_sigma(s)
 """
