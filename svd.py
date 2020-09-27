@@ -14,28 +14,41 @@ from matplotlib import pyplot as plt
 
 def compute(A, full_matrices=True, compute_uv=True, hermitian=False):
 	u, s, vt = np.linalg.svd(A, full_matrices, compute_uv, hermitian)
-	s = sigma_matrix(s)
+	s = sigma_to_matrix(u, s, vt, full_matrices)
 
 	return u, s, vt
 
 
-def sigma_matrix(s):
-	size = s.shape[0]
-	sigma = np.eye(size)
+def reconstruct(u, s, vt, n_basis=0):
+	if n_basis == 0:
+		n_basis = s.shape[0]
 
-	for i in range(size):
-		for j in range(size):
+	u = u[:, :n_basis]
+	s = s[:n_basis, :]
+
+	return u@s@vt
+
+
+def sigma_to_matrix(u, s, vt, full_matrices=True):
+	n_u = u.shape[0]
+	n_s = s.shape[0]
+	n_vt = vt.shape[0]
+
+	if full_matrices:
+		sigma = np.zeros((n_u, n_vt))
+	else:
+		sigma = np.zeros((n_s, n_s))
+
+	for i in range(sigma.shape[0]):
+		for j in range(sigma.shape[1]):
 			if i == j:
+				sigma[i][j] = 1
 				sigma[i][j] *= s[i]
 
 	return sigma
 
 
-def reconstruct_matrix(u, s, vt):
-	return u@sigma_matrix(s)@vt
-
-
-def plot_sigma(s, diag_matrix=True, modes_limit=0):
+def plot_sigma(s, modes_limit=0, diag_matrix=True):
 	sigma = []
 	n_sigma = s.shape[0]
 
