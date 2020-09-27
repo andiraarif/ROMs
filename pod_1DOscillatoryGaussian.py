@@ -4,6 +4,7 @@
 # -----------------------------------------------------------------------------#
 # Description:
 # Perform Proper Orthogonal Decomposition (POD) to 1D oscillatory gaussian
+# and reconstruct the solution using selected number of POD modes
 #
 #==============================================================================#
 
@@ -42,24 +43,34 @@ for i in range(Nt):
 	Y[:, i] = y1*np.sin(2*np.pi*omega1*t[i]) + y2*np.sin(2*np.pi*omega2*t[i])
 
 # Perform POD
-u, s, vt = svd.compute(Y)
+u, s, vt = svd.compute(Y, full_matrices=False)
+svd.plot_sigma(s, modes_limit=10)
+
+# Reconstruct matrix
+Yred = svd.reconstruct(u, s, vt, n_basis=2)
 
 
-def plot_function(x, Y):
+def plot_function(x, Y, Yred):
 	plt.ion()
 	figure, ax = plt.subplots()
-	line1, = ax.plot(x, Y[:, 0])
+	line1, = ax.plot(x, Y[:, 0], label="Analytic")
+	line2, = ax.plot(x, Yred[:, 0], label="POD")
 
 	plt.title("1-Dimensional Oscillatory Gaussan",fontsize=12)
 	plt.xlabel("X",fontsize=10)
 	plt.ylabel("Y",fontsize=10)
 	plt.axis([-2, 2, -1.5, 1.5])
+	plt.legend()
 
 	for t in range(Nt-1):
 		updated_y = Y[:, t+1]
+		updated_yred = Yred[:, t+1]
 
 		line1.set_xdata(x)
 		line1.set_ydata(updated_y)
+
+		line2.set_xdata(x)
+		line2.set_ydata(updated_yred)
 
 		figure.canvas.draw()
 		figure.canvas.flush_events()
@@ -67,5 +78,4 @@ def plot_function(x, Y):
 		time.sleep(0.01)
 
 
-#plot_function(x, Y)
-#svd.plot_sigma(s, modes_limit=10)
+plot_function(x, Y, Yred)
